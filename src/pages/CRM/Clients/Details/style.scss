@@ -1,0 +1,62 @@
+@import "../../../../../common-assets/css/variables";
+@import "../../../../../common-assets/css/rootui-parts/profile";
+
+.rui-task-closed {
+  .rui-task-icon {
+    color: #2fc787;
+  }
+}
+
+.rui-timeline .rui-timeline-content {
+  background-color: #fff !important;
+  background: #fff !important;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 16px;
+  border-radius: 8px !important;
+}
+
+.rui-timeline-item.canceled {
+  .rui-timeline-icon {
+    background: #fb2b1514 !important;
+    background-color: #fb2b1514 !important;
+  }
+}
+.rui-timeline-item.active {
+  .rui-timeline-icon {
+    background: #ffb748 !important;
+    background-color: #ffb748 !important;
+  }
+}
+.rui-timeline-item.inactive {
+  .rui-timeline-icon {
+    background: #ffb748 !important;
+    background-color: #ffb748 !important;
+  }
+}
+.rui-timeline-item.rescheduled {
+  .rui-timeline-icon {
+    background: #15e4fb1f !important;
+    background-color: #15e4fb1f !important;
+  }
+}
+.rui-timeline-item.scheduled {
+  .rui-timeline-icon {
+    background: #ffb7481f !important;
+    background-color: #ffb7481f !important;
+  }
+}
+.rui-timeline-item.realized {
+  .rui-timeline-icon {
+    background: #2fc7871f !important;
+    background-color: #2fc7871f !important;
+  }
+}
+.rui-timeline-item.closed {
+  .rui-timeline-icon {
+    background: #2fc7871f !important;
+    background-color: #2fc7871f !important;
+  }
+}
+
+.rui-timeline .rui-timeline-line {
+  background-color: #e6ecf0 !important;
+}

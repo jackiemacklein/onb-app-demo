@@ -1,0 +1,19 @@
+@import "../../../../common-assets/css/variables";
+@import "../../../../common-assets/css/rootui-parts/project-management";
+
+.list-unstyled.options {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  li {
+    padding-left: 20px;
+  }
+  li:first-child {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  li:last-child {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

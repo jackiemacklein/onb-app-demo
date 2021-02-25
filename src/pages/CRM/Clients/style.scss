@@ -1,0 +1,45 @@
+@import "../../../../common-assets/css/variables";
+@import "../../../../common-assets/css/rootui-parts/file-manager";
+
+.table-border-effect-kie {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 15px;
+  background: #fff;
+}
+
+.form-border-effect-kie {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 15px;
+  background: #fff;
+}
+
+table.dataTable tbody tr {
+  background-color: transparent !important;
+}
+
+table.dataTable tbody tr span {
+  background-color: #fff !important;
+  background: #fff !important;
+
+  transition: 0.4s all ease-in-out;
+}
+
+.rui-filemanager-file-link {
+  font-weight: 700;
+}
+
+.rui-filemanager-file-a {
+  color: #6c757d;
+}
+
+.rui-filemanager-file-a:hover {
+  color: #fac032;
+}
+
+.nav-link {
+  cursor: pointer;
+}

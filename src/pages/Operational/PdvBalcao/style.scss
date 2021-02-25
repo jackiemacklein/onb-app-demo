@@ -1,0 +1,50 @@
+.list-items-sale {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  white-space: nowrap;
+  margin-right: 6px;
+  margin-left: 5px;
+}
+
+.card-border-effect-kie {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 16px;
+  border-radius: 8px;
+}
+
+.payment-types {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.payment-type {
+  flex: 50%;
+  padding: 5px !important;
+}
+
+.bill-filters {
+  padding: 15px;
+  border: 1px solid #e6ecf0;
+  margin-bottom: 15px;
+  background: #fff;
+  border-radius: 5px !important;
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .btn {
+    .text {
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+  }
+  .dropdown-menu {
+    z-index: 9;
+    overflow: auto;
+  }
+}

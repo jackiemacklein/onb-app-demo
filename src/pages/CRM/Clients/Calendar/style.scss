@@ -1,0 +1,19 @@
+@import "../../../../../common-assets/css/variables";
+@import "../../../../../common-assets/css/rootui-parts/plugin-fullcalendar";
+
+.fc-event-scheduled {
+  border-left-color: #ffb748 !important;
+  cursor: pointer;
+}
+.fc-event-canceled {
+  border-left-color: #fb2b15 !important;
+  cursor: pointer;
+}
+.fc-event-realized {
+  border-left-color: #2fc787 !important;
+  cursor: pointer;
+}
+.fc-event-rescheduled {
+  border-left-color: #15e4fb !important;
+  cursor: pointer;
+}

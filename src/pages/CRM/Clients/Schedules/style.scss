@@ -1,0 +1,36 @@
+@import "../../../../../common-assets/css/variables";
+@import "../../../../../common-assets/css/rootui-parts/profile";
+
+.rui-icon {
+  width: 25px;
+  min-width: 25px;
+  height: 25px;
+}
+
+.rui-task-scheduled {
+  .rui-icon {
+    color: #ffb748;
+  }
+}
+
+.rui-task-canceled {
+  .rui-icon {
+    color: #fb2b15;
+  }
+}
+
+.rui-task-realized {
+  .rui-icon {
+    color: #2fc787;
+  }
+}
+
+.rui-task-rescheduled {
+  .rui-icon {
+    color: #15e4fb;
+  }
+}
+
+.rui-task-title {
+  cursor: pointer;
+}

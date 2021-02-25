@@ -1,0 +1,12 @@
+@import "../../../../common-assets/css/variables";
+@import "../../../../common-assets/css/rootui-parts/profile";
+
+.menu-credit-card {
+  display: flex;
+  position: absolute;
+  right: 0;
+
+  z-index: 9999;
+
+  cursor: pointer;
+}

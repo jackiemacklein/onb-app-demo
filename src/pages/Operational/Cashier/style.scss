@@ -1,0 +1,189 @@
+@import "../../../../common-assets/css/variables";
+@import "../../../../common-assets/css/rootui-parts/file-manager";
+@import "../../../../common-assets/css/rootui-parts/project-management";
+
+.rui-kanban-col.kie {
+  background-color: #ebecf0;
+  border-radius: 3px;
+  overflow-y: auto;
+}
+
+.nav-link {
+  cursor: pointer;
+}
+
+.container-fluid .blockquote.blockquote-style-2 {
+  border-left: 4px solid #fac032;
+  background-color: transparent;
+}
+
+.rui-scrollbar::-webkit-scrollbar-track {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.rui-scrollbar::-webkit-scrollbar {
+  height: 10px;
+  background-color: #f8f9fa;
+}
+
+.rui-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #eaecf0;
+  border-radius: 4px;
+}
+
+.rui-scrollbar {
+  overflow: auto !important;
+}
+
+.list-group.list-group-flush.rui-project-releases-list.kie {
+  li {
+    background: transparent;
+    background-color: transparent;
+  }
+}
+
+.balance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.balance-item {
+  margin-right: 20px;
+
+  .rui-changelog-subtitle {
+    margin-top: -10px !important;
+    margin-bottom: 10px !important;
+  }
+}
+.blockquote.blockquote-style-2.kie {
+  border-left: 4px solid #ebecf0 !important;
+  margin-bottom: auto !important;
+}
+
+.rui-filemanager-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .rui-filemanager-buttons ul {
+    list-style: none;
+    display: flex;
+    flex-direction: revert;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-lg .rui-icon,
+  .btn-group-lg > .btn .rui-icon {
+    width: 25px;
+    min-width: 25px;
+    height: 25px;
+  }
+}
+
+.btn-danger {
+  color: #ef5164;
+}
+
+.btn-success {
+  color: #2fc787;
+}
+
+.cashier-open {
+  border-left: 4px solid #fac032 !important;
+}
+.cashier-closed {
+  border-left: 4px solid #28a745 !important;
+}
+
+.rui-project-task-info-icon.in {
+  color: #2fc787;
+}
+
+.rui-project-task-info-icon.spun {
+  color: #a4a6a8;
+}
+
+.rui-project-task-info-icon.out {
+  color: #ef5164;
+}
+
+.rui-task-icon.in {
+  color: #2fc787;
+}
+
+.rui-task-icon.spun {
+  color: #a4a6a8;
+}
+.rui-task-icon.out {
+  color: #ef5164;
+}
+
+.rui-task-subtitle.price {
+  font-size: 16px !important;
+  color: #424344;
+
+  strong {
+    font-size: 16px !important;
+  }
+
+  &.out {
+    color: #ef5164;
+  }
+  &.in {
+    color: #2fc787;
+  }
+  &.spun {
+    color: #a4a6a8;
+  }
+}
+.rui-task-title.kie {
+  cursor: pointer;
+  font-size: 16px !important;
+}
+
+.rui-task-subtitle {
+  strong {
+    font-size: 12px;
+  }
+}
+
+.list-group-item {
+  border: 0px !important;
+}
+
+.rui-project-task-info {
+  justify-content: flex-end;
+  font-weight: bold;
+}
+.rui-project-task-list {
+  li:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  li:nth-child(odd) {
+    background: inherit;
+  }
+}
+
+.page-link {
+  cursor: pointer;
+}
+
+.rui-task {
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .rui-task-content {
+      flex: 1;
+      margin-right: 0;
+    }
+    .rui-task-subtitle.price {
+      align-self: flex-end;
+    }
+  }
+}
