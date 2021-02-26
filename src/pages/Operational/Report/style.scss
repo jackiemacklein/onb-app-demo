@@ -1,0 +1,377 @@
+@import "../../../../common-assets/css/variables";
+@import "../../../../common-assets/css/rootui-parts/file-manager";
+@import "../../../../common-assets/css/rootui-parts/project-management";
+
+.bill-filters {
+  padding: 15px;
+  border: 1px solid #e6ecf0;
+  margin-bottom: 15px;
+  background: #fff;
+  border-radius: 5px;
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .btn {
+    .text {
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+  }
+  .dropdown-menu {
+    z-index: 9;
+    overflow: auto;
+  }
+}
+
+.card-body.py-30.pt-0 {
+  padding-top: 0 !important;
+}
+
+.card {
+  .rui-project-task-search {
+    border-top: 0 !important;
+
+    .input-group-prepend .btn,
+    .input-group-append .btn {
+      z-index: 0;
+    }
+  }
+  z-index: 0;
+}
+.rui-kanban-col.kie {
+  background-color: #ebecf0;
+  border-radius: 3px;
+  overflow-y: auto;
+}
+
+.nav-link {
+  cursor: pointer;
+}
+
+.container-fluid .blockquote.blockquote-style-2 {
+  border-left: 4px solid #fac032;
+  background-color: transparent;
+}
+
+.rui-scrollbar::-webkit-scrollbar-track {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.rui-scrollbar::-webkit-scrollbar {
+  height: 10px;
+  background-color: #f8f9fa;
+}
+
+.rui-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #eaecf0;
+  border-radius: 4px;
+}
+
+.rui-scrollbar {
+  overflow: auto !important;
+}
+
+.list-group.list-group-flush.rui-project-releases-list.kie {
+  li {
+    background: transparent;
+    background-color: transparent;
+  }
+}
+
+.balance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.balance-item {
+  margin-right: 20px;
+
+  .rui-changelog-subtitle {
+    margin-top: -10px !important;
+    margin-bottom: 10px !important;
+  }
+}
+.blockquote.blockquote-style-2.kie {
+  border-left: 4px solid #ebecf0 !important;
+  margin-bottom: auto !important;
+}
+
+.rui-filemanager-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .rui-filemanager-buttons ul {
+    list-style: none;
+    display: flex;
+    flex-direction: revert;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.btn-danger {
+  color: #ef5164;
+}
+
+.btn-success {
+  color: #2fc787;
+}
+
+.cashier-open {
+  border-left: 4px solid #fac032 !important;
+}
+.cashier-closed {
+  border-left: 4px solid #28a745 !important;
+}
+
+.rui-project-task-info-icon.in {
+  color: #2fc787;
+}
+
+.rui-project-task-info-icon.out {
+  color: #ef5164;
+}
+
+.rui-task-icon.in {
+  color: #2fc787;
+}
+
+.rui-task-icon.out {
+  color: #ef5164;
+}
+
+.rui-task-subtitle.price {
+  font-size: 16px !important;
+  color: #424344;
+
+  strong {
+    font-size: 16px !important;
+  }
+
+  &.out {
+    color: #ef5164;
+  }
+  &.in {
+    color: #2fc787;
+  }
+}
+.rui-task-subtitle.balance {
+  font-size: 16px !important;
+  color: #424344;
+
+  strong {
+    font-size: 16px !important;
+  }
+
+  &.out {
+    color: #ff7e7c;
+  }
+  &.in {
+    color: #00c2cc;
+  }
+}
+.rui-task-title.kie {
+  cursor: pointer;
+  font-size: 16px !important;
+}
+
+.rui-task-subtitle {
+  strong {
+    font-size: 12px;
+  }
+}
+
+.list-group-item {
+  border: 0px !important;
+}
+
+.rui-project-task-info {
+  justify-content: flex-end;
+
+  align-items: center;
+  font-weight: normal;
+
+  flex-wrap: wrap;
+}
+.page-link {
+  cursor: pointer;
+}
+
+.rui-task {
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .rui-task-content {
+      flex: 1;
+      margin-right: 0;
+    }
+    .rui-task-subtitle.price {
+      align-self: flex-end;
+    }
+    .rui-task-subtitle.balance {
+      align-self: flex-end;
+    }
+  }
+}
+
+.bills {
+  .row-bill:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  .row-bill:nth-child(odd) {
+    background: inherit;
+  }
+  .h2.card-title {
+    font-size: 1.38rem;
+    margin-bottom: 4px;
+
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .h4.text-muted.card-subtitle {
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+  }
+  .card-link {
+    padding: 5px 10px;
+    border-radius: 25px;
+  }
+
+  .closed.card-link {
+    background: #009688;
+    color: #fff;
+  }
+  .open.card-link {
+    background: #ccc;
+    color: #000;
+  }
+  .canceled.card-link {
+    background: #ff7e7c;
+    color: #fff;
+  }
+  .open.card-link {
+    background: #ccc;
+    color: #000;
+  }
+
+  .card {
+    flex-direction: row;
+    background: transparent;
+    background-color: transparent;
+  }
+  .card-body {
+    flex: 1;
+    padding-right: 0;
+  }
+
+  .rui-task-subtitle.price {
+    padding: 25px 30px;
+    padding-left: 20px;
+    font-size: 16px !important;
+    color: #424344;
+  }
+  .rui-task-subtitle.balance {
+    padding: 25px 30px;
+    padding-left: 20px;
+    font-size: 16px !important;
+    color: #424344;
+  }
+  .rui-task-subtitle.price.closed {
+    color: #2fc787;
+  }
+  .rui-task-subtitle.price.open {
+    color: #424344;
+  }
+  .rui-task-subtitle.price.canceled {
+    color: #ccc;
+  }
+  .rui-task-subtitle.balance.in {
+    color: #00c2cc !important;
+  }
+  .rui-task-subtitle.balance.out {
+    color: #ff7e7c !important;
+  }
+}
+.input-group-prepend {
+  .btn-lg .rui-icon,
+  .btn-group-lg > .btn .rui-icon {
+    width: 25px;
+    min-width: 25px;
+    height: 25px;
+  }
+}
+
+.card-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 20px 20px;
+  max-width: 65px;
+  min-width: 65px;
+
+  font-size: 16px !important;
+  color: #424344;
+  line-height: 20px;
+  z-index: 6;
+
+  text-transform: capitalize;
+
+  strong {
+    font-size: 20px;
+  }
+  small {
+    font-size: 70%;
+  }
+}
+
+.row-bill {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  position: relative;
+
+  border-bottom: 1px solid #e6ecf0;
+  .card {
+    flex: 1;
+    border: 0 !important;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .row-bill {
+    .card-day {
+      padding: 20px 10px;
+      max-width: 55px;
+      min-width: 55px;
+    }
+    .card-body {
+      padding-bottom: 5px !important;
+      padding-left: 10px !important;
+    }
+    .card {
+      padding-right: 10px !important;
+      padding-left: 10px !important;
+      flex-direction: column;
+    }
+  }
+  .rui-task-subtitle.price {
+    text-align: right;
+    padding-top: 0 !important;
+  }
+}

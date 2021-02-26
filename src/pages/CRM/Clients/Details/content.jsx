@@ -82,12 +82,12 @@ class Content extends Component {
                     <div className="rui-profile-info">
                       <h3 className="rui-profile-info-title h4">{this.state.data.name}</h3>
                       <small className="text-grey-6 mt-2 mb-15">{this.state.data.cpf}</small>
-                      <Link className="rui-profile-info-mail" to={`mailto:${this.state.data.email}`}>
+                      <a className="rui-profile-info-mail" href={`mailto:${this.state.data.email}`}>
                         {this.state.data.email}
-                      </Link>
-                      <Link className="rui-profile-info-phone" to={`tel:${this.state.data.phone}`}>
+                      </a>
+                      <a className="rui-profile-info-phone" href={`tel:${this.state.data.phone}`}>
                         {this.state.data.phone}
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 </div>

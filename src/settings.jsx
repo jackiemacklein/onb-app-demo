@@ -43,6 +43,12 @@ const settings = {
         "/pdv/balcao": {
           name: "Nova Venda Balcão",
         },
+        "/pdv/ranking": {
+          name: "Ranking",
+        },
+        "/pdv/relatorio": {
+          name: "Relatório do Dia",
+        },
       },
     },
 

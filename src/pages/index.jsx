@@ -15,6 +15,10 @@ import PdvAppPayment from "./Operational/PdvApp/Payment";
 import PdvBalcao from "./Operational/PdvBalcao";
 // --> Caixa
 import Cashier from "./Operational/Cashier";
+// --> Relatório do dia de vendas e serviços
+import PDVReport from "./Operational/Report";
+// --> Ranking de vendas e serviços
+import PDVRanking from "./Operational/Ranking";
 
 // -> Financeiro
 // --> Contas a pagar e a receber
@@ -76,6 +80,8 @@ export default {
   "/pdv/app": PdvApp,
   "/pdv/app/pagamento/:id": PdvAppPayment,
   "/pdv/balcao/": PdvBalcao,
+  "/pdv/relatorio": PDVReport,
+  "/pdv/ranking": PDVRanking,
   "/caixa/": Cashier,
 
   //financeiro
