@@ -7,6 +7,18 @@
   }
 }
 
+.rui-task-canceled {
+  .rui-task-icon {
+    color: #ef5164;
+  }
+}
+
+.rui-task-open {
+  .rui-task-icon {
+    color: #007bff;
+  }
+}
+
 .rui-timeline .rui-timeline-content {
   background-color: #fff !important;
   background: #fff !important;

@@ -137,7 +137,7 @@ class PageYaybar extends Component {
               <ul>
                 {this.renderSubmenus(settings.navigation_sidebar)}
 
-                <li className="yay-label">-</li>
+                <li className="yay-label">____</li>
                 <li>
                   <NavLink to="#" onClick={this.logOut}>
                     <span className="yay-icon">

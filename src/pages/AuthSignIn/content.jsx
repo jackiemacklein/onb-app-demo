@@ -85,7 +85,7 @@ class Content extends Component {
     try {
       const { data } = await api.post("/sessions", { email: this.state.email, password: this.state.password });
       if (data) {
-        updateSettings({ users: [{ img: data?.user?.image_path, img_profile: data?.user?.image_path, name: data?.user?.name }] });
+        //updateSettings({ users: [{ img: data?.user?.image_path, img_profile: data?.user?.image_path, name: data?.user?.name }] });
 
         updateAuth({
           token: data.token,

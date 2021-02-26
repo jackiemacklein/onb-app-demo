@@ -13,6 +13,8 @@ import Dashboard from "./Dashboard";
 import PdvApp from "./Operational/PdvApp";
 import PdvAppPayment from "./Operational/PdvApp/Payment";
 import PdvBalcao from "./Operational/PdvBalcao";
+// --> Visualiza as vendas
+import PDVShow from "./Operational/PdvShow";
 // --> Caixa
 import Cashier from "./Operational/Cashier";
 // --> Relatório do dia de vendas e serviços
@@ -82,6 +84,7 @@ export default {
   "/pdv/balcao/": PdvBalcao,
   "/pdv/relatorio": PDVReport,
   "/pdv/ranking": PDVRanking,
+  "/pdv/show/:id": PDVShow,
   "/caixa/": Cashier,
 
   //financeiro

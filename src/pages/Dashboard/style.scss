@@ -1,2 +1,33 @@
 @import "../../../common-assets/css/variables";
 @import "../../../common-assets/css/rootui-parts/plugin-chart-chartist";
+
+.bill-filters {
+  padding: 15px;
+  border: 1px solid #e6ecf0;
+  margin-bottom: 15px;
+  background: #fff;
+  border-radius: 5px;
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .btn {
+    .text {
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+  }
+  .dropdown-menu {
+    z-index: 9;
+    overflow: auto;
+  }
+}
+
+.chart-filial {
+  border: 1px solid #e6ecf0;
+  border-radius: 0.25rem;
+  padding: 10px;
+  margin-bottom: 15px;
+}

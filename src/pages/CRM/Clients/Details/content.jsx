@@ -74,7 +74,7 @@ class Content extends Component {
     return (
       <Fragment>
         <div className="rui-profile row vertical-gap">
-          <div className="col-lg-6 col-xl-5">
+          <div className={this.state.data.sales.length > 0 ? `col-lg-6 col-xl-5` : `col-lg-12 col-xl-12`}>
             <div className="card">
               <div className="card-body">
                 <div className="row vertical-gap">
@@ -120,54 +120,63 @@ class Content extends Component {
               </div>
             </div>
           </div>
-          <div className="col-lg-6 col-xl-7">
-            <div className="card">
-              <div className="card-body">
-                <div className="d-flex align-items-center">
-                  <h2 className="card-title mnb-6 mr-auto">Últimos atendimentos</h2>
-                  {/*<Link to={`/pdv/balcao/${this.state.data.id}`}>
-                    <button className="btn btn-brand btn-uniform btn-round btn-sm mnt-8 mnb-8" type="button">
-                      <Icon name="plus" />
-                    </button>
-    </Link>*/}
+          {this.state.data.sales.length > 0 ? (
+            <>
+              <div className="col-lg-6 col-xl-7">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-center">
+                      <h2 className="card-title mnb-6 mr-auto">Os 3 Últimos atendimentos</h2>
+                    </div>
+
+                    <ul className="list-group list-group-flush rui-profile-task-list">
+                      {this.state.data.sales.map(item => (
+                        <li className="list-group-item">
+                          <div className={`rui-task rui-task-${item.state}`}>
+                            <div className="rui-task-icon">
+                              <Icon name={icon(item.state)} />
+                            </div>
+                            <div className="rui-task-content">
+                              <Link className="rui-task-title" target="_blank" to={`/pdv/show/${item.id}`}>
+                                {item.title}
+                              </Link>
+                              <small className="rui-task-subtitle">
+                                Atendente:{" "}
+                                <a>
+                                  <strong>{item?.user?.name}</strong>
+                                </a>
+                              </small>
+                              <small className="rui-task-subtitle">
+                                Valor:{" "}
+                                <a>
+                                  <strong>{item.amount.toLocaleString()}</strong>
+                                </a>
+                              </small>
+                              <small className="rui-task-subtitle">
+                                Em:{" "}
+                                <a>
+                                  <strong>{format(parseISO(item.date) ?? "", "dd'/'MM'/'yyyy' às 'HH':'mm")}</strong>
+                                </a>
+                              </small>
+                              <small className="rui-task-subtitle">
+                                Situação:{" "}
+                                <a>
+                                  <strong>{translate(item.state)}</strong>
+                                </a>
+                              </small>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <ul className="list-group list-group-flush rui-profile-task-list">
-                  {this.state.data.sales.map(item => (
-                    <li className="list-group-item">
-                      <div className={`rui-task rui-task-${item.state}`}>
-                        <div className="rui-task-icon">
-                          <Icon name="check-square" />
-                        </div>
-                        <div className="rui-task-content">
-                          <Link className="rui-task-title" to={`/pdv/viewer/${item.id}`}>
-                            {item.title}
-                          </Link>
-                          <small className="rui-task-subtitle">
-                            Atendente:{" "}
-                            <a>
-                              <strong>{item?.user?.name}</strong>
-                            </a>
-                          </small>
-                          <small className="rui-task-subtitle">
-                            Valor:{" "}
-                            <a>
-                              <strong>{item.amount.toLocaleString()}</strong>
-                            </a>
-                          </small>
-                          <small className="rui-task-subtitle">
-                            Em:{" "}
-                            <a>
-                              <strong>{format(parseISO(item.date) ?? "", "dd'/'MM'/'yyyy' às 'HH':'mm")}</strong>
-                            </a>
-                          </small>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            <></>
+          )}
+
           <div className="col-12">
             <Tabs sliding>
               <Tabs.NavItem isActive={activeTab === "timeline"} onClick={() => this.toggleTab("timeline")}>
