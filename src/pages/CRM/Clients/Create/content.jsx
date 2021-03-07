@@ -27,14 +27,17 @@ class Content extends Component {
       cpf: "",
       phone: "",
       profile_id: "",
+      user_id: "",
       is_active: true,
       token: "",
       loading: false,
       profiles: [],
+      users: [],
     };
 
     this.save = this.save.bind(this);
     this.loadProfiles = this.loadProfiles.bind(this);
+    this.loadUsers = this.loadUsers.bind(this);
   }
 
   async save(event) {
@@ -46,6 +49,7 @@ class Content extends Component {
     try {
       await api.post("/crm/clients", {
         profile_id: this.state.profile_id.value,
+        user_id: this.state.user_id.value,
         name: this.state.name,
         email: this.state.email,
         cpf: this.state.cpf,
@@ -85,8 +89,18 @@ class Content extends Component {
     });
   }
 
+  async loadUsers() {
+    const { data } = await api.get("/users/?all=true");
+    this.setState({
+      users: data.map(d => {
+        return { value: d.id, label: d.name };
+      }),
+    });
+  }
+
   componentDidMount() {
     this.loadProfiles();
+    this.loadUsers();
   }
 
   render() {
@@ -139,6 +153,19 @@ class Content extends Component {
               options={profiles}
               styles={customStyles}
               onChange={row => this.setState({ profile_id: row })}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="user_id">É um colaborador?</Label>
+            <Select
+              id="user_id"
+              name="user_id"
+              defaultValue={this.state.user_id}
+              value={this.state.user_id}
+              options={this.state.users}
+              styles={customStyles}
+              onChange={row => this.setState({ user_id: row })}
             />
           </FormGroup>
 

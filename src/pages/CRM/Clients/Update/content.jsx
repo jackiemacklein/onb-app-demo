@@ -28,15 +28,18 @@ class Content extends Component {
       cpf: "",
       phone: "",
       profile_id: "",
+      user_id: "",
       is_active: true,
       token: "",
       loading: false,
       profiles: [],
+      users: [],
     };
 
     this.save = this.save.bind(this);
     this.loadProfiles = this.loadProfiles.bind(this);
     this.loadData = this.loadData.bind(this);
+    this.loadUsers = this.loadUsers.bind(this);
   }
 
   async save(event) {
@@ -48,6 +51,7 @@ class Content extends Component {
     try {
       await api.put(`/crm/clients/${this.state.id}`, {
         profile_id: this.state.profile_id.value,
+        user_id: this.state.user_id.value,
         name: this.state.name,
         email: this.state.email,
         cpf: this.state.cpf,
@@ -86,10 +90,22 @@ class Content extends Component {
       }),
     });
 
-    this.loadData();
+    this.loadUsers();
   }
 
-  async loadData(pro) {
+  async loadUsers() {
+    const { data } = await api.get("/users/?all=true");
+    const users = data.map(d => {
+      return { value: d.id, label: d.name };
+    });
+
+    this.setState({
+      users: users,
+    });
+    this.loadData(users);
+  }
+
+  async loadData(users) {
     const { id } = this.props.match.params;
 
     const { data } = await api.get(`crm/clients/${id}`);
@@ -100,6 +116,7 @@ class Content extends Component {
       cpf: data.cpf,
       phone: data.phone,
       profile_id: { value: data.profile_id, label: data.profile.name },
+      user_id: users.find(u => u.value === data.user_id),
       is_active: data.is_active,
       token: data.token,
     });
@@ -160,6 +177,19 @@ class Content extends Component {
               options={profiles}
               styles={customStyles}
               onChange={row => this.setState({ profile_id: row })}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="user_id">É um colaborador?</Label>
+            <Select
+              id="user_id"
+              name="user_id"
+              defaultValue={this.state.user_id}
+              value={this.state.user_id}
+              options={this.state.users}
+              styles={customStyles}
+              onChange={row => this.setState({ user_id: row })}
             />
           </FormGroup>
 

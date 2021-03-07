@@ -158,14 +158,16 @@ class Content extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (Cookies.get("rui-auth-token")) {
-      if (
-        prevState.filter_start_date !== this.state.filter_start_date ||
-        prevState.filter_end_date !== this.state.filter_end_date ||
-        prevState.filter_filial_id !== this.state.filter_filial_id ||
-        prevState.filter_state !== this.state.filter_state
-      ) {
-        this.loadSales();
+    if (window.location.href.includes("/pdv/show/")) {
+      if (Cookies.get("rui-auth-token")) {
+        if (
+          prevState.filter_start_date !== this.state.filter_start_date ||
+          prevState.filter_end_date !== this.state.filter_end_date ||
+          prevState.filter_filial_id !== this.state.filter_filial_id ||
+          prevState.filter_state !== this.state.filter_state
+        ) {
+          this.loadSales();
+        }
       }
     }
   }

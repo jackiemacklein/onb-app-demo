@@ -150,14 +150,16 @@ class Content extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (Cookies.get("rui-auth-token")) {
-      if (
-        prevState.filter_start_date !== this.state.filter_start_date ||
-        prevState.filter_end_date !== this.state.filter_end_date ||
-        prevState.filter_filial_id !== this.state.filter_filial_id
-      ) {
-        this.setState({ show_user_id: 0, sales: [] });
-        this.loadUsers();
+    if (window.location.href.includes("/pdv/ranking")) {
+      if (Cookies.get("rui-auth-token")) {
+        if (
+          prevState.filter_start_date !== this.state.filter_start_date ||
+          prevState.filter_end_date !== this.state.filter_end_date ||
+          prevState.filter_filial_id !== this.state.filter_filial_id
+        ) {
+          this.setState({ show_user_id: 0, sales: [] });
+          this.loadUsers();
+        }
       }
     }
   }

@@ -16,6 +16,7 @@ import Select from "react-select";
 import ReactSortable from "react-sortablejs";
 import Cookies from "js-cookie";
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
+import { withRouter } from "react-router-dom";
 
 /**
  * import services/utils
@@ -265,8 +266,10 @@ class Content extends Component {
 
   // --> Carrega informações do caixa
   async loadCashier() {
+    const { id } = this.props.match.params;
+
     try {
-      const { data } = await api.get("/operational/cashiers/0");
+      const { data } = await api.get(`/operational/cashiers/${id ?? 0}`);
 
       if (data) {
         this.setState({
@@ -759,7 +762,7 @@ class Content extends Component {
                       this.toggleModalOpenMovement({ value: "out", label: "Retirada/Saída/Despesa" });
                     }}
                     type="button"
-                    className="btn btn-custom-round btn-danger btn-lg">
+                    className="btn btn-custom-round btn-danger btn-lg btn-opt">
                     <Icon name="arrow-down-circle" />
                   </button>
 
@@ -776,7 +779,7 @@ class Content extends Component {
                       this.toggleModalOpenMovement({ value: "in", label: "Receita/Entrada" });
                     }}
                     type="button"
-                    className="btn btn-custom-round btn-success btn-lg">
+                    className="btn btn-custom-round btn-success btn-lg btn-opt">
                     <Icon name="arrow-up-circle" />
                   </button>
                   <UncontrolledPopover placement="right" target="popover_income" trigger="hover">
@@ -870,16 +873,48 @@ class Content extends Component {
                     </UncontrolledPopover>
                   </li>
                 ) : (
-                  <li className="ml-20">
-                    <button id="popover_close" onClick={() => this.toggleModalConfirmReopenCashier()} type="button" className="btn btn-warning btn-lg kie">
-                      Reabrir Caixa
-                    </button>
+                  <></>
+                )}
 
-                    <UncontrolledPopover placement="right" target="popover_close" trigger="hover">
-                      <PopoverHeader>Reabrir Caixa do Dia</PopoverHeader>
-                      <PopoverBody>Clique para reabrir o caixa</PopoverBody>
-                    </UncontrolledPopover>
-                  </li>
+                {this.state.cashier_id && this.state.data.state === "closed" ? (
+                  <>
+                    <li className="ml-20">
+                      <button id="popover_reopen" onClick={() => this.toggleModalConfirmReopenCashier()} type="button" className="btn btn-warning btn-lg kie ">
+                        Reabrir Caixa
+                      </button>
+
+                      <UncontrolledPopover placement="right" target="popover_reopen" trigger="hover">
+                        <PopoverHeader>Reabrir Caixa do Dia</PopoverHeader>
+                        <PopoverBody>Clique para reabrir o caixa</PopoverBody>
+                      </UncontrolledPopover>
+                    </li>
+                  </>
+                ) : (
+                  <></>
+                )}
+
+                {!this.state.cashier_id && !this.state.data.state ? (
+                  <>
+                    <li className="ml-20">
+                      <button
+                        id="popover_open"
+                        onClick={() => {
+                          this.toggle();
+                          this.setState({ opening_balance: 0 });
+                        }}
+                        type="button"
+                        className="btn btn-success btn-lg kie">
+                        Abrir Caixa
+                      </button>
+
+                      <UncontrolledPopover placement="right" target="popover_open" trigger="hover">
+                        <PopoverHeader>Abrir Caixa do Dia</PopoverHeader>
+                        <PopoverBody>Clique para abrir o caixa</PopoverBody>
+                      </UncontrolledPopover>
+                    </li>
+                  </>
+                ) : (
+                  <></>
                 )}
               </ul>
             </div>
@@ -1022,10 +1057,18 @@ class Content extends Component {
         </nav>
 
         {/** modal abri caixa */}
-        <Modal isOpen={this.state.modalOpen} className={this.props.className} fade onOpened={() => document.querySelector("#opening_balance").focus()}>
+        <Modal
+          isOpen={this.state.modalOpen}
+          className={this.props.className}
+          toggle={this.toggle}
+          fade
+          onOpened={() => document.querySelector("#opening_balance").focus()}>
           <form onSubmit={this.toggleModalConfirmOpeningCashier}>
             <div className="modal-header">
               <h5 className="modal-title h2">ABERTURA DO CAIXA DO DIA</h5>
+              <Button className="close" color="" onClick={this.toggle}>
+                <Icon name="x" />
+              </Button>
             </div>
             <ModalBody>
               Realizar abertura do caixa para o dia <mark className="display-4">{format(new Date(), "dd'/'MM'/'yyyy")}</mark>
@@ -1081,6 +1124,9 @@ class Content extends Component {
               </FormGroup>
             </ModalBody>
             <ModalFooter>
+              <Button color="secondary" onClick={this.toggle}>
+                Cancelar
+              </Button>
               <Button color="success" type="submit" disabled={this.state.loading}>
                 {this.state.loading ? "Abrindo..." : "Abrir Caixa"}
               </Button>
@@ -1352,4 +1398,4 @@ export default connect(
     addToast: actionAddToast,
     removeToast: actionRemoveToast,
   },
-)(Content);
+)(withRouter(Content));

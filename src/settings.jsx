@@ -77,13 +77,13 @@ const settings = {
       key: "contas-e-carteiras",
     },
 
-    "/cartoes-de-credito": {
+    /*"/cartoes-de-credito": {
       name: "Cartões de Crédito",
       icon: "credit-card",
       key: "cartoes-de-credito",
-    },
+    },*/
 
-    //CRMc
+    //CRM
     "/crm/clientes": {
       label: "CRM",
       name: "Clientes",
@@ -104,6 +104,34 @@ const settings = {
       name: "Agenda de Reservas",
       icon: "calendar",
       key: "agendamentos",
+    },
+
+    // Relatórios
+    "/relatorios/gerenciais/comissoes": {
+      label: "Relatórios",
+      name: "Gerenciais",
+      icon: "pie-chart",
+      key: "gerencial",
+      sub: {
+        "/relatorios/gerenciais/comissoes": {
+          name: "Comissões",
+        },
+        "/relatorios/gerenciais/receitasxdespesas": {
+          name: "Receitas x Despesas",
+        },
+        "/relatorios/gerenciais/dre": {
+          name: "DRE",
+        },
+        "/relatorios/gerenciais/caixas": {
+          name: "Caixas diários",
+        },
+        "/relatorios/gerenciais/estoque": {
+          name: "Estoque",
+        },
+        "/relatorios/gerenciais/vendas": {
+          name: "Vendas & Serviços",
+        },
+      },
     },
 
     //Administraçao

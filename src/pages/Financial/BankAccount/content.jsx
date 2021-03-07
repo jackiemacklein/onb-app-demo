@@ -162,7 +162,7 @@ class Content extends Component {
                                 </ul>
                                 <ul className="list-unstyled options">
                                   <li>
-                                    <Link className="rui-changelog-file" to={`/contas/${item.id}/relatorio`}>
+                                    <Link className="rui-changelog-file" to={`/lancamentos/?bank_account_id=${item.id}`}>
                                       <Icon name="search" />
                                       Ver detalhes da conta
                                     </Link>

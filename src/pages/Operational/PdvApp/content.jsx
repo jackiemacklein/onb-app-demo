@@ -24,6 +24,7 @@ class Content extends Component {
     this.state = {
       data: [],
       selectedItems: [],
+      allowLoading: true,
     };
 
     this.loadData = this.loadData.bind(this);
@@ -33,13 +34,17 @@ class Content extends Component {
 
   async loadData() {
     try {
-      const { data } = await api.get("/sales?filial_id=2&state=open");
+      const { data } = await api.get("/sales?state=open");
       let items = data.map(s => ({ checked: false, id: s.id }));
 
       this.setState({ data });
       this.setState({ selectedItems: items });
     } catch (error) {
       console.log(error);
+    }
+
+    if (window.location.href.includes("/pdv/app")) {
+      this.loadData();
     }
   }
 
@@ -64,7 +69,13 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    this.loadData();
+    if (window.location.href.includes("/pdv/app")) {
+      this.loadData();
+    }
+  }
+
+  componentWillUnmount() {
+    this.setState({ allowLoading: false });
   }
 
   render() {

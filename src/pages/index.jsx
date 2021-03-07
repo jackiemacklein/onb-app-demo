@@ -46,6 +46,11 @@ import CRMClientsCalendar from "./CRM/Clients/Calendar";
 // --> schedules
 import CRMCalendar from "./CRM/Calendar";
 
+// -> Relatórios
+// --> Gerenciais
+import ReportGerencialCashier from "./Report/Gerencial/Cashier";
+import ReportGerencialCommission from "./Report/Gerencial/Commission";
+
 // -> Adminsitrations
 // --> Filiais
 import Filial from "./ADM/Filial";
@@ -86,6 +91,7 @@ export default {
   "/pdv/ranking": PDVRanking,
   "/pdv/show/:id": PDVShow,
   "/caixa/": Cashier,
+  "/caixa/:id": Cashier,
 
   //financeiro
   "/lancamentos": Flow,
@@ -111,6 +117,11 @@ export default {
   "/crm/clientes/:id/calendario": CRMClientsCalendar,
   // --> schedules
   "/crm/agenda": CRMCalendar,
+
+  // -> Report
+  // --> Gerenciais
+  "/relatorios/gerenciais/caixas": ReportGerencialCashier,
+  "/relatorios/gerenciais/comissoes": ReportGerencialCommission,
 
   //Adminstrations
   "/filiais": Filial,

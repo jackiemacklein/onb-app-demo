@@ -8,7 +8,7 @@ import "./style.scss";
  */
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 
 import { Modal, ModalBody, ModalFooter } from "reactstrap";
@@ -19,6 +19,8 @@ import { Card, CardBody, CardText, CardTitle, CardSubtitle } from "reactstrap";
 import { CardLink, CustomInput } from "reactstrap";
 import Cookies from "js-cookie";
 import Select from "react-select";
+
+import queryString from "query-string";
 
 /**
  * Internal Dependencies
@@ -232,14 +234,20 @@ class Content extends Component {
 
   // --> Carrega na api as contas
   async loadBankAcconts() {
+    const { location } = this.props;
+
+    const params = queryString.parse(location.search);
+
     try {
       const { data } = await api.get("/banks/accounts");
-      if (data.length > 0) {
-        this.setState({
-          bank_accounts: data.map(item => {
-            return { value: item.id, label: item.name };
-          }),
-        });
+      const bank_accounts = data.map(item => {
+        return { value: item.id, label: item.name };
+      });
+
+      this.setState({ bank_accounts });
+
+      if (params.bank_account_id) {
+        this.loadBills();
       }
     } catch (error) {
       console.log(error);
@@ -664,24 +672,26 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    this.loadBills();
     this.loadFiliais();
     this.loadBankAcconts();
     this.loadBankAccontsIn();
     this.loadCategories();
+    this.loadBills();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (Cookies.get("rui-auth-token")) {
-      if (
-        prevState.filter_start_date !== this.state.filter_start_date ||
-        prevState.filter_end_date !== this.state.filter_end_date ||
-        prevState.filter_filial_id !== this.state.filter_filial_id ||
-        prevState.filter_category_id !== this.state.filter_category_id ||
-        prevState.filter_bank_account_id !== this.state.filter_bank_account_id ||
-        prevState.filter_type !== this.state.filter_type
-      ) {
-        this.loadBills();
+    if (window.location.href.includes("/lancamentos")) {
+      if (Cookies.get("rui-auth-token")) {
+        if (
+          prevState.filter_start_date !== this.state.filter_start_date ||
+          prevState.filter_end_date !== this.state.filter_end_date ||
+          prevState.filter_filial_id !== this.state.filter_filial_id ||
+          prevState.filter_category_id !== this.state.filter_category_id ||
+          prevState.filter_bank_account_id !== this.state.filter_bank_account_id ||
+          prevState.filter_type !== this.state.filter_type
+        ) {
+          this.loadBills();
+        }
       }
     }
   }
@@ -812,7 +822,7 @@ class Content extends Component {
             </Col>
             <Col xs={12} sm={6} md={2}>
               <Label for="filter_bank_account_id" className="mt-10">
-                Bancos&Carterias
+                Contas & Carterias
               </Label>
               <Select
                 id="filter_bank_account_id"
@@ -845,7 +855,7 @@ class Content extends Component {
                       this.toggleOut();
                     }}
                     type="button"
-                    className="ml-15 btn btn-custom-round btn-danger btn-lg">
+                    className="ml-15 btn btn-custom-round btn-danger btn-lg btn-opt">
                     <Icon name="arrow-down-circle" />
                   </button>
 
@@ -861,7 +871,7 @@ class Content extends Component {
                       this.toggleIn();
                     }}
                     type="button"
-                    className="ml-15 btn btn-custom-round btn-success btn-lg">
+                    className="ml-15 btn btn-custom-round btn-success btn-lg btn-opt">
                     <Icon name="arrow-up-circle" />
                   </button>
                   <UncontrolledPopover placement="right" target="popover_income" trigger="hover">
@@ -876,7 +886,7 @@ class Content extends Component {
                       this.toggleTransf();
                     }}
                     type="button"
-                    className="ml-15 btn btn-custom-round btn-primary btn-lg">
+                    className="ml-15 btn btn-custom-round btn-primary btn-lg btn-opt">
                     <Icon name="git-branch" />
                   </button>
 
@@ -1519,4 +1529,4 @@ export default connect(
     addToast: actionAddToast,
     removeToast: actionRemoveToast,
   },
-)(Content);
+)(withRouter(Content));

@@ -66,7 +66,7 @@ class Carousel extends Component {
           grabCursor
           centeredSlides
           slidesPerView="auto"
-          initialSlide={2}
+          initialSlide={3}
           spaceBetween={30}
           speed={400}
           keyboard={{ enabled: true }}
@@ -76,8 +76,8 @@ class Carousel extends Component {
           <div className="swiper-slide">
             <div className="rui-widget rui-widget-chart">
               <div className="rui-widget-chart-info">
-                <div className="rui-widget-title h2">+14</div>
-                <small className="rui-widget-subtitle">Usuários</small>
+                <div className="rui-widget-title h2">+14%</div>
+                <small className="rui-widget-subtitle">Receitas</small>
               </div>
               <div className="rui-chartjs-container">
                 <Chartist
@@ -93,8 +93,8 @@ class Carousel extends Component {
           <div className="swiper-slide">
             <div className="rui-widget rui-widget-chart">
               <div className="rui-widget-chart-info">
-                <div className="rui-widget-title h2">+10</div>
-                <small className="rui-widget-subtitle">Filiais</small>
+                <div className="rui-widget-title h2">-10</div>
+                <small className="rui-widget-subtitle">Despesas</small>
               </div>
               <div className="rui-chartjs-container">
                 <Chartist
@@ -110,42 +110,24 @@ class Carousel extends Component {
           <div className="swiper-slide rui-swiper-slide-total">
             <div className="rui-widget rui-widget-chart rui-widget-total">
               <div className="rui-widget-chart-info">
-                <div className="rui-widget-title h1">R$ 1371.24</div>
-                <small className="rui-widget-subtitle">Faturamento</small>
+                <div className="rui-widget-title h1">R$ 1.371.24</div>
+                <small className="rui-widget-subtitle">Receitas</small>
               </div>
             </div>
           </div>
-          <div className="swiper-slide">
-            <div className="rui-widget rui-widget-chart">
+          <div className="swiper-slide rui-swiper-slide-total">
+            <div className="rui-widget rui-widget-chart rui-widget-total">
               <div className="rui-widget-chart-info">
-                <div className="rui-widget-title h2">+ 25%</div>
-                <small className="rui-widget-subtitle">Serviços Realizados</small>
-              </div>
-              <div className="rui-chartjs-container">
-                <Chartist
-                  className="rui-chartist rui-chartist-donut"
-                  data={{
-                    series: [5, 2],
-                  }}
-                  {...getChartistOptions()}
-                />
+                <div className="rui-widget-title h1">R$ 1.371.24</div>
+                <small className="rui-widget-subtitle">Despesas</small>
               </div>
             </div>
           </div>
-          <div className="swiper-slide">
-            <div className="rui-widget rui-widget-chart">
+          <div className="swiper-slide rui-swiper-slide-total">
+            <div className="rui-widget rui-widget-chart rui-widget-total">
               <div className="rui-widget-chart-info">
-                <div className="rui-widget-title h2">-12%</div>
-                <small className="rui-widget-subtitle">Produtos Vendidos</small>
-              </div>
-              <div className="rui-chartjs-container">
-                <Chartist
-                  className="rui-chartist rui-chartist-donut"
-                  data={{
-                    series: [2, 8],
-                  }}
-                  {...getChartistOptions()}
-                />
+                <div className="rui-widget-title h1">R$ 1.371.24</div>
+                <small className="rui-widget-subtitle">Saldo</small>
               </div>
             </div>
           </div>

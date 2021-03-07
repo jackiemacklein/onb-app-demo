@@ -45,8 +45,10 @@ class Content extends Component {
 
     this.state = {
       bank_accounts: [],
-
       flow_categories: [],
+
+      data_filial: [],
+
       types: [
         { value: "in", label: "Contas à Receber" },
         { value: "out", label: "Contas à Pagar" },
@@ -80,7 +82,27 @@ class Content extends Component {
     this.getChartjsOptions = this.getChartjsOptions.bind(this);
     this.getChartjsData = this.getChartjsData.bind(this);
     this.getChartistOptions = this.getChartistOptions.bind(this);
+    this.changeFilterDate = this.changeFilterDate.bind(this);
     this.loadFiliais = this.loadFiliais.bind(this);
+    this.loadBankAcconts = this.loadBankAcconts.bind(this);
+    this.loadDataFilial = this.loadDataFilial.bind(this);
+  }
+
+  // --> carrega os dados do grafico das filiais
+  async loadDataFilial() {
+    try {
+      const date_s = format(this.state.filter_start_date, "yyyy-MM-dd");
+      const date_e = this.state.filter_end_date ? format(this.state.filter_end_date, "yyyy-MM-dd") : format(this.state.filter_start_date, "yyyy-MM-dd");
+
+      const { data } = await api.get(
+        `/dashboard/data/filiais/?start_date=${date_s}&end_date=${date_e}&filial_id=${this.state.filter_filial_id.value}&bank_account_id=${this.state.filter_bank_account_id.value}`,
+      );
+
+      this.setState({ data_filial: data });
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao carregar dados das filiais");
+    }
   }
 
   // carrega as filiais
@@ -90,13 +112,30 @@ class Content extends Component {
       if (data.length > 0) {
         this.setState({
           filiais: data.map(item => {
-            return { value: item.id, label: item.name };
+            return { value: item.id, label: item.name, color: "#" + (((1 << 24) * Math.random()) | 0).toString(16) };
           }),
         });
       }
     } catch (error) {
       console.log(error);
       alert("Erro ao carregar filiais");
+    }
+  }
+
+  // --> Carrega na api as contas
+  async loadBankAcconts() {
+    try {
+      const { data } = await api.get("/banks/accounts");
+      if (data.length > 0) {
+        this.setState({
+          bank_accounts: data.map(item => {
+            return { value: item.id, label: item.name };
+          }),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao carregar Contas e Carterias");
     }
   }
 
@@ -203,11 +242,36 @@ class Content extends Component {
     };
   }
 
+  // --> realiza a alteração do filtro de datas
+  changeFilterDate(dates) {
+    const [start, end] = dates;
+    this.setState({ filter_start_date: start, filter_end_date: end });
+  }
+
   componentDidMount() {
+    this.loadDataFilial();
     this.loadFiliais();
+    this.loadBankAcconts();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (window.location.href.includes("/dashboard")) {
+      if (Cookies.get("rui-auth-token")) {
+        if (
+          prevState.filter_start_date !== this.state.filter_start_date ||
+          prevState.filter_end_date !== this.state.filter_end_date ||
+          prevState.filter_filial_id !== this.state.filter_filial_id ||
+          prevState.filter_bank_account_id !== this.state.filter_bank_account_id
+        ) {
+          this.loadDataFilial();
+        }
+      }
+    }
   }
 
   render() {
+    const { data_filial, filiais } = this.state;
+
     const customStyles = {
       control: (css, state) => {
         return {
@@ -246,22 +310,7 @@ class Content extends Component {
       <Fragment>
         <div className="bill-filters">
           <Row>
-            <Col xs={12} sm={6} md={2}>
-              <Label for="filter_type" className="mt-10">
-                Tipo
-              </Label>
-              <Select
-                id="filter_type"
-                name="filter_type"
-                defaultValue={this.state.filter_type}
-                value={this.state.filter_type}
-                options={this.state.filter_types}
-                styles={customStyles}
-                onChange={row => this.setState({ filter_type: row })}
-              />
-            </Col>
-
-            <Col xs={12} sm={6} md={2}>
+            <Col xs={12} sm={6} md={3}>
               <Label for="filter_filial_id" className="mt-10">
                 Filial
               </Label>
@@ -276,7 +325,22 @@ class Content extends Component {
               />
             </Col>
 
-            <Col xs={12} sm={12} md={4}>
+            <Col xs={12} sm={6} md={3}>
+              <Label for="filter_bank_account_id" className="mt-10">
+                Contas & Carterias
+              </Label>
+              <Select
+                id="filter_bank_account_id"
+                name="filter_bank_account_id"
+                defaultValue={this.state.filter_bank_account_id}
+                value={this.state.filter_bank_account_id}
+                options={[{ value: "", label: "Todos" }, ...this.state.bank_accounts]}
+                styles={customStyles}
+                onChange={row => this.setState({ filter_bank_account_id: row })}
+              />
+            </Col>
+
+            <Col xs={12} sm={12} md={6}>
               <Label className="mt-10">Período</Label>
               <Dropdown tag="div" className="" showTriangle>
                 <Dropdown.Toggle tag="button" className="btn btn-brand btn-block mb-5">
@@ -303,41 +367,12 @@ class Content extends Component {
                 </Dropdown.Menu>
               </Dropdown>
             </Col>
-
-            <Col xs={12} sm={6} md={2}>
-              <Label for="filter_category_id" className="mt-10">
-                Categorias
-              </Label>
-              <Select
-                id="filter_category_id"
-                name="filter_category_id"
-                defaultValue={this.state.filter_category_id}
-                value={this.state.filter_category_id}
-                options={[{ value: "", label: "Todas" }, ...this.state.flow_categories]}
-                styles={customStyles}
-                onChange={row => this.setState({ filter_category_id: row })}
-              />
-            </Col>
-            <Col xs={12} sm={6} md={2}>
-              <Label for="filter_bank_account_id" className="mt-10">
-                Bancos&Carterias
-              </Label>
-              <Select
-                id="filter_bank_account_id"
-                name="filter_bank_account_id"
-                defaultValue={this.state.filter_bank_account_id}
-                value={this.state.filter_bank_account_id}
-                options={[{ value: "", label: "Todos" }, ...this.state.bank_accounts]}
-                styles={customStyles}
-                onChange={row => this.setState({ filter_bank_account_id: row })}
-              />
-            </Col>
           </Row>
         </div>
 
         {/* grafico do faturamento por filial */}
         <div className="rui-gap-1" />
-        <h2 className="mt-0 mb-2">Acompanhamento Por Filial</h2>
+        <h2 className="mt-0 mb-2">Consolidado Por Filial</h2>
         <div className="chart-filial">
           <ReactFlot
             id="line-chart"
@@ -352,6 +387,62 @@ class Content extends Component {
                   },
                 },
               },
+              yaxis: {
+                showTicks: false,
+                gridLines: false,
+                color: "transparent",
+              },
+              xaxis: {
+                showTicks: false,
+                gridLines: false,
+                ticks: data_filial[0]?.datas.map((item, index) => {
+                  return [index, item.date];
+                }),
+                color: "transparent",
+              },
+              grid: {
+                borderWidth: 0,
+              },
+            }}
+            data={data_filial.map((item, index) => {
+              return {
+                data: item.datas.map((item2, index2) => {
+                  return [index2, item2.value];
+                }),
+
+                label: item.filial_name,
+                color: `rgba(171, 184, 255, ${1 - (index + 1) / 10})`,
+                shadowSize: index,
+                points: {
+                  show: true,
+                  fillColor: "#fff",
+                  lineWidth: 1,
+                },
+              };
+            })}
+            width="100%"
+            height="320px"
+          />
+        </div>
+
+        {/* grafico de Evolução Por Contas & Carterias */}
+        <div className="rui-gap-1" />
+        <h2 className="mt-0 mb-2">Evolução Por Contas & Carterias</h2>
+        <div className="chart-filial">
+          <ReactFlot
+            id="banks-chart"
+            options={{
+              series: {
+                lines: {
+                  show: true,
+                  lineWidth: 1,
+                  fill: false,
+                  fillColor: {
+                    colors: [{ opacity: 1 }, { opacity: 1 }],
+                  },
+                },
+              },
+
               yaxis: {
                 showTicks: false,
                 gridLines: false,
@@ -390,6 +481,7 @@ class Content extends Component {
                   [8, 10],
                   [9, 25],
                 ],
+                label: "Filial 1",
                 color: "rgba(171, 184, 255, 0.8)",
                 shadowSize: 0,
                 points: {
@@ -410,6 +502,7 @@ class Content extends Component {
                   [8, 18],
                   [9, 20],
                 ],
+                label: "Filial 2",
                 color: "rgba(94, 119, 255, 0.8)",
                 shadowSize: 0,
                 points: {
@@ -424,82 +517,131 @@ class Content extends Component {
           />
         </div>
 
-        {/* grafico do faturamento por tipo de pagamento */}
+        {/* perfomance */}
         <div className="rui-gap-1" />
-        <h2 className="mt-0 mb-2">Total por tipo de pagamento</h2>
-        <div className="chart-filial">
-          <ReactFlot
-            id="pie-chart"
-            options={{
-              series: {
-                pie: {
-                  show: true,
-                  radius: 1,
-                  label: {
-                    show: true,
-                    radius: 2 / 4,
-                    formatter(t) {
-                      return `<div style="font-size:12px;text-align:center;padding:2px;color:white;">${t}</div>`;
-                    },
-                  },
-                  stroke: {
-                    width: 0,
-                  },
-                },
-              },
-              yaxis: {
-                showTicks: false,
-                gridLines: false,
-                color: "transparent",
-              },
-              xaxis: {
-                showTicks: false,
-                gridLines: false,
-                color: "transparent",
-              },
-              grid: {
-                borderWidth: 0,
-              },
-            }}
-            data={[
-              {
-                data: 5,
-                label: "Jan",
-                color: "rgba(94, 119, 255, 0.8)",
-              },
-              {
-                data: 3,
-                label: "Feb",
-                color: "rgba(94, 119, 255, 0.6)",
-              },
-              {
-                data: 4,
-                label: "Mar",
-                color: "rgba(94, 119, 255, 0.4)",
-              },
-            ]}
-            width="100%"
-            height="320px"
-          />
-        </div>
-
-        {/* Swiper */}
-        <div className="rui-gap-1" />
-        <h2 className="mt-0 mb-2">Comparativos de performance</h2>
+        <h2 className="mt-0 mb-2">Comparativos de Performance</h2>
         <Carousel getChartjsData={this.getChartjsData} getChartjsOptions={this.getChartjsOptions} getChartistOptions={this.getChartistOptions} />
 
-        {/* Earnings by countries and map */}
-        <div className="rui-gap-1" />
-        <h2 className="mt-0 mb-2">Serviços, Produtos & Colaboradores</h2>
-        <Row className="vertical-gap">
-          <Col lg="4">
-            <WidgetCountries />
+        <Row>
+          <Col xs={12} sm={12} md={6}>
+            {/* grafico de Receitas por Categoria */}
+            <div className="rui-gap-1" />
+            <h2 className="mt-0 mb-2">Receitas por Categoria</h2>
+            <div className="chart-filial">
+              <ReactFlot
+                id="pie-chart-in"
+                options={{
+                  series: {
+                    pie: {
+                      show: true,
+                      radius: 1,
+                      label: {
+                        show: true,
+                        radius: 2 / 4,
+                        formatter(t) {
+                          return `<div style="font-size:12px;text-align:center;padding:2px;color:white;">${t}</div>`;
+                        },
+                      },
+                      stroke: {
+                        width: 0,
+                      },
+                    },
+                  },
+                  yaxis: {
+                    showTicks: false,
+                    gridLines: false,
+                    color: "transparent",
+                  },
+                  xaxis: {
+                    showTicks: false,
+                    gridLines: false,
+                    color: "transparent",
+                  },
+                  grid: {
+                    borderWidth: 0,
+                  },
+                }}
+                data={[
+                  {
+                    data: 5,
+                    label: "Jan",
+                    color: "rgba(94, 119, 255, 0.8)",
+                  },
+                  {
+                    data: 3,
+                    label: "Feb",
+                    color: "rgba(94, 119, 255, 0.6)",
+                  },
+                  {
+                    data: 4,
+                    label: "Mar",
+                    color: "rgba(94, 119, 255, 0.4)",
+                  },
+                ]}
+                width="100%"
+                height="320px"
+              />
+            </div>
           </Col>
-          <Col lg="4">
-            <WidgetCountries />
-          </Col>
-          <Col lg="4">
-            <WidgetCountries />
+          <Col xs={12} sm={12} md={6}>
+            {/* grafico de Despesas por Categoria */}
+            <div className="rui-gap-1" />
+            <h2 className="mt-0 mb-2">Despesas por Categoria</h2>
+            <div className="chart-filial">
+              <ReactFlot
+                id="pie-chart-out"
+                options={{
+                  series: {
+                    pie: {
+                      show: true,
+                      radius: 1,
+                      label: {
+                        show: true,
+                        radius: 2 / 4,
+                        formatter(t) {
+                          return `<div style="font-size:12px;text-align:center;padding:2px;color:white;">${t}</div>`;
+                        },
+                      },
+                      stroke: {
+                        width: 0,
+                      },
+                    },
+                  },
+                  yaxis: {
+                    showTicks: false,
+                    gridLines: false,
+                    color: "transparent",
+                  },
+                  xaxis: {
+                    showTicks: false,
+                    gridLines: false,
+                    color: "transparent",
+                  },
+                  grid: {
+                    borderWidth: 0,
+                  },
+                }}
+                data={[
+                  {
+                    data: 5,
+                    label: "Jan",
+                    color: "rgba(94, 119, 255, 0.8)",
+                  },
+                  {
+                    data: 3,
+                    label: "Feb",
+                    color: "rgba(94, 119, 255, 0.6)",
+                  },
+                  {
+                    data: 4,
+                    label: "Mar",
+                    color: "rgba(94, 119, 255, 0.4)",
+                  },
+                ]}
+                width="100%"
+                height="320px"
+              />
+            </div>
           </Col>
         </Row>
       </Fragment>
