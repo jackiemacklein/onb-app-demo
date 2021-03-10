@@ -291,14 +291,14 @@ class Content extends Component {
                         </div>
                         {this.state.data.state === "closed" ? (
                           <>
-                            Fechada em <mark>{this.state.data.closed_at ? format(parseISO(this.state.data.closed_at), "dd'/'MM'/'yyyy HH':'mm") : ""}</mark>
+                            Fechada em <mark>{this.state.data.updated_at ? format(parseISO(this.state.data.updated_at), "dd'/'MM'/'yyyy HH':'mm") : ""}</mark>
                           </>
                         ) : (
                           <>
                             {this.state.data.state === "canceled" ? (
                               <>
                                 Cancelada em{" "}
-                                <mark>{this.state.data.canceled_at ? format(parseISO(this.state.data.canceled_at), "dd'/'MM'/'yyyy HH':'mm") : ""}</mark>
+                                <mark>{this.state.data.updated_at ? format(parseISO(this.state.data.updated_at), "dd'/'MM'/'yyyy HH':'mm") : ""}</mark>
                               </>
                             ) : (
                               <>

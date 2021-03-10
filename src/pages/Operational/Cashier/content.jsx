@@ -925,6 +925,10 @@ class Content extends Component {
                 <blockquote className="blockquote blockquote-style-2 kie">
                   <div className="balance">
                     <div className="balance-item">
+                      <h3 className="rui-changelog-title text-secondary">R$ {this.state.data.opening_balance.toLocaleString()}</h3>
+                      <div className="rui-changelog-subtitle text-secondary mt-0">Saldo de Abertura</div>
+                    </div>
+                    <div className="balance-item">
                       <h3 className="rui-changelog-title text-success">R$ {this.state.data.income.toLocaleString()}</h3>
                       <div className="rui-changelog-subtitle text-success mt-0">Entradas</div>
                     </div>

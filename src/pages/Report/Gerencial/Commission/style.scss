@@ -2,7 +2,7 @@
 @import "../../../../../common-assets/css/rootui-parts/file-manager";
 @import "../../../../../common-assets/css/rootui-parts/project-management";
 
-.bill-filters {
+.commission-filters {
   padding: 15px;
   border: 1px solid #e6ecf0;
   margin-bottom: 15px;
@@ -131,7 +131,7 @@
 .cashier-open {
   border-left: 4px solid #fac032 !important;
 }
-.cashier-closed {
+.cashier-paid {
   border-left: 4px solid #28a745 !important;
 }
 
@@ -226,11 +226,11 @@
   }
 }
 
-.bills {
-  .row-bill:nth-child(even) {
+.commissions {
+  .row-commission:nth-child(even) {
     background-color: #f8f9fa;
   }
-  .row-bill:nth-child(odd) {
+  .row-commission:nth-child(odd) {
     background: inherit;
   }
   .h2.card-title {
@@ -252,21 +252,42 @@
     border-radius: 25px;
   }
 
-  .closed.card-link {
+  .paid.card-link {
     background: #009688;
     color: #fff;
+
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
   }
-  .open.card-link {
-    background: #ccc;
+  .opened.card-link {
+    background: #fac032;
     color: #000;
+
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.6;
+    }
   }
   .canceled.card-link {
     background: #ff7e7c;
     color: #fff;
+
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
   }
   .open.card-link {
     background: #ccc;
     color: #000;
+
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
   }
 
   .card {
@@ -291,7 +312,7 @@
     font-size: 16px !important;
     color: #424344;
   }
-  .rui-task-subtitle.price.closed {
+  .rui-task-subtitle.price.paid {
     color: #2fc787;
   }
   .rui-task-subtitle.price.open {
@@ -341,7 +362,7 @@
   }
 }
 
-.row-bill {
+.row-commission {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -357,7 +378,7 @@
 }
 
 @include media-breakpoint-down(sm) {
-  .row-bill {
+  .row-commission {
     .card-day {
       padding: 20px 10px;
       max-width: 55px;

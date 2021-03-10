@@ -8,17 +8,16 @@ import "./style.scss";
  */
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 
-import { Modal, ModalBody, ModalFooter } from "reactstrap";
-import { Button, Input, Label, FormGroup } from "reactstrap";
-
-import { Row, Col } from "reactstrap";
+import { Row, Col, Label } from "reactstrap";
 import { Card, CardBody, CardText, CardTitle, CardSubtitle } from "reactstrap";
 import { CardLink, CustomInput } from "reactstrap";
 import Cookies from "js-cookie";
 import Select from "react-select";
+
+import queryString from "query-string";
 
 /**
  * Internal Dependencies
@@ -42,7 +41,11 @@ class Content extends Component {
   constructor(props) {
     super(props);
 
+    const params = queryString.parse(props.location.search);
+
     this.state = {
+      get_user_id: params.user_id ?? "",
+
       page: 0,
       page_limit: 20,
       page_length: 1,
@@ -54,6 +57,7 @@ class Content extends Component {
       users: [{ value: Cookies.get("rui-auth-user_id"), label: Cookies.get("rui-auth-user_name") }],
       filiais: [],
       sales: [],
+      users: [],
       states: [
         { value: "open", label: "Em Aberto" },
         { value: "closed", label: "Fechadas/Finalizadas" },
@@ -66,17 +70,19 @@ class Content extends Component {
         expected_in: 0,
         realized_in: 0,
       },
-      filter_start_date: new Date(),
-      filter_end_date: null,
+      filter_start_date: params.start_date ? parseISO(params.start_date) : new Date(),
+      filter_end_date: params.end_date ? parseISO(params.end_date) : null,
       filter_filial_id: {
         value: Cookies.get("rui-auth-filial_id") != "undefined" ? Cookies.get("rui-auth-filial_id") : "",
         label: Cookies.get("rui-auth-filial_name") != "undefined" ? Cookies.get("rui-auth-filial_name") : "Selecione",
       },
       filter_state: { value: "", label: "Todas" },
+      filter_user_id: { value: "-", label: "Todos" },
     };
 
     this.loadFiliais = this.loadFiliais.bind(this);
     this.loadSales = this.loadSales.bind(this);
+    this.loadUsers = this.loadUsers.bind(this);
     this.filterHistory = this.filterHistory.bind(this);
     this.calculations = this.calculations.bind(this);
   }
@@ -99,7 +105,7 @@ class Content extends Component {
     this.setState({ calculations: { realized_in, expected_in } });
   }
 
-  // carrega as filiais
+  // --> carrega as filiais
   async loadFiliais() {
     try {
       const { data } = await api.get("/filiais");
@@ -116,14 +122,32 @@ class Content extends Component {
     }
   }
 
+  // --> carrega as usuarios
+  async loadUsers() {
+    try {
+      const { data } = await api.get("/users");
+      const users = data.map(item => {
+        return { value: item.id, label: item.name };
+      });
+      this.setState({ users });
+
+      if (this.state.get_user_id) this.setState({ filter_user_id: users.find(i => i.value == this.state.get_user_id) });
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao carregar os usuários");
+    }
+  }
+
   // --> Carrega na api os lancamentos de contas a pagar e a receber
   async loadSales() {
     try {
       const date_s = format(this.state.filter_start_date, "yyyy-MM-dd");
       const date_e = this.state.filter_end_date ? format(this.state.filter_end_date, "yyyy-MM-dd") : format(this.state.filter_start_date, "yyyy-MM-dd");
 
+      const user_id = this.state.filter_user_id.value !== "-" ? this.state.filter_user_id.value : this.state.get_user_id;
+
       const { data } = await api.get(
-        `/sales/?state=${this.state.filter_state.value}&start_date=${date_s}&end_date=${date_e}&filial_id=${this.state.filter_filial_id.value}`,
+        `/sales/?all=true&user_id=${user_id}&state=${this.state.filter_state.value}&start_date=${date_s}&end_date=${date_e}&filial_id=${this.state.filter_filial_id.value}`,
       );
 
       this.setState({ sales: data });
@@ -155,15 +179,17 @@ class Content extends Component {
   componentDidMount() {
     this.loadSales();
     this.loadFiliais();
+    this.loadUsers();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (window.location.href.includes("/pdv/show/")) {
+    if (window.location.href.includes("/pdv/relatorio")) {
       if (Cookies.get("rui-auth-token")) {
         if (
           prevState.filter_start_date !== this.state.filter_start_date ||
           prevState.filter_end_date !== this.state.filter_end_date ||
           prevState.filter_filial_id !== this.state.filter_filial_id ||
+          prevState.filter_user_id !== this.state.filter_user_id ||
           prevState.filter_state !== this.state.filter_state
         ) {
           this.loadSales();
@@ -254,7 +280,7 @@ class Content extends Component {
               />
             </Col>
 
-            <Col xs={12} sm={12} md={6}>
+            <Col xs={12} sm={12} md={3}>
               <Label className="mt-10">Período</Label>
               <Dropdown tag="div" className="" showTriangle>
                 <Dropdown.Toggle tag="button" className="btn btn-brand btn-block mb-5">
@@ -280,6 +306,21 @@ class Content extends Component {
                   </li>
                 </Dropdown.Menu>
               </Dropdown>
+            </Col>
+
+            <Col xs={12} sm={12} md={3}>
+              <Label for="filter_user_id" className="mt-10">
+                Usuários
+              </Label>
+              <Select
+                id="filter_user_id"
+                name="filter_user_id"
+                defaultValue={this.state.filter_user_id}
+                value={this.state.filter_user_id}
+                options={[{ value: "", label: "Todos" }, ...this.state.users]}
+                styles={customStyles}
+                onChange={row => this.setState({ filter_user_id: row })}
+              />
             </Col>
           </Row>
         </div>
@@ -431,4 +472,4 @@ export default connect(
     addToast: actionAddToast,
     removeToast: actionRemoveToast,
   },
-)(Content);
+)(withRouter(Content));

@@ -7,8 +7,7 @@ import { withRouter } from "react-router-dom";
 //import { Link } from "react-router-dom";
 import { Card, CardImg, CardBody, CardTitle, CardText, Button, Row, Col, Input, Label, FormGroup } from "reactstrap";
 import { Modal, ModalBody, ModalFooter } from "reactstrap";
-import Cookies from "js-cookie";
-import Select from "react-select";
+
 import AsyncSelect from "react-select/async";
 
 /**
@@ -16,6 +15,7 @@ import AsyncSelect from "react-select/async";
  */
 import Icon from "../../../components/icon";
 import api from "./../../../utils/api";
+import { maskRealBeautify } from "./../../../utils/functions";
 import { addToast as actionAddToast } from "../../../actions";
 
 /**
@@ -868,6 +868,7 @@ class Content extends Component {
                 name="discount_amount"
                 placeholder="0,00"
                 type="text"
+                //value={maskRealBeautify(this.state.item_edit_discount_amount)}
                 value={this.state.item_edit_discount_amount}
                 onChange={event => this.handleCalcDiscountByAmount(event.target.value)}
                 onKeyUp={event => this.handleCalcDiscountByAmount(event.target.value)}

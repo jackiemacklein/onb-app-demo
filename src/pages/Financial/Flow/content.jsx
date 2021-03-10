@@ -10,6 +10,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
+import ReactExport from "react-export-excel";
 
 import { Modal, ModalBody, ModalFooter } from "reactstrap";
 import { Button, Input, Label, FormGroup } from "reactstrap";
@@ -38,6 +39,10 @@ import api from "../../../utils/api";
 import { format, parseISO } from "date-fns";
 import pt from "date-fns/locale/pt-BR";
 
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
 /**
  * Component
  */
@@ -45,7 +50,11 @@ class Content extends Component {
   constructor(props) {
     super(props);
 
+    const params = queryString.parse(props.location.search);
+
     this.state = {
+      get_client_id: params.client_id ?? "",
+
       page: 0,
       page_limit: 20,
       page_length: 1,
@@ -60,6 +69,7 @@ class Content extends Component {
       bank_accounts: [],
       bank_accounts_in: [],
       flow_categories: [],
+      clients: [],
       previous_balance: null,
       term: "",
       loading: false,
@@ -111,8 +121,8 @@ class Content extends Component {
         { value: "tranf=true&type=out", label: "Transferências feitas" },
         { value: "tranf=true&type=in", label: "Transferências recebidas" },
       ],
-      filter_start_date: new Date(),
-      filter_end_date: null,
+      filter_start_date: params.start_date ? parseISO(params.start_date) : new Date(),
+      filter_end_date: params.end_date ? parseISO(params.end_date) : null,
       filter_filial_id: {
         value: Cookies.get("rui-auth-filial_id") != "undefined" ? Cookies.get("rui-auth-filial_id") : "",
         label: Cookies.get("rui-auth-filial_name") != "undefined" ? Cookies.get("rui-auth-filial_name") : "Selecione",
@@ -120,6 +130,7 @@ class Content extends Component {
       filter_category_id: { value: "", label: "Todas" },
       filter_bank_account_id: { value: "", label: "Todos" },
       filter_type: { value: "", label: "Todos os lançamentos" },
+      filter_client_id: { value: "-", label: "Todos" },
     };
 
     this.toggleIn = this.toggleIn.bind(this);
@@ -135,6 +146,7 @@ class Content extends Component {
     this.loadBankAcconts = this.loadBankAcconts.bind(this);
     this.loadBankAccontsIn = this.loadBankAccontsIn.bind(this);
     this.loadCategories = this.loadCategories.bind(this);
+    this.loadClients = this.loadClients.bind(this);
     this.filterHistory = this.filterHistory.bind(this);
     this.clearFields = this.clearFields.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
@@ -213,14 +225,32 @@ class Content extends Component {
     }
   }
 
+  // carrega as clients
+  async loadClients() {
+    try {
+      const { data } = await api.get("/crm/clients?is_active=true");
+      const clients = data.map(item => {
+        return { value: item.id, label: item.name };
+      });
+      this.setState({ clients });
+
+      if (this.state.get_client_id) this.setState({ filter_client_id: clients.find(i => i.value == this.state.get_client_id) });
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao carregar os clientes");
+    }
+  }
+
   // --> Carrega na api os lancamentos de contas a pagar e a receber
   async loadBills() {
     try {
       const date_s = format(this.state.filter_start_date, "yyyy-MM-dd");
       const date_e = this.state.filter_end_date ? format(this.state.filter_end_date, "yyyy-MM-dd") : format(this.state.filter_start_date, "yyyy-MM-dd");
 
+      const client_id = this.state.filter_client_id.value !== "-" ? this.state.filter_client_id.value : this.state.get_client_id;
+
       const { data } = await api.get(
-        `/bills/?start_date=${date_s}&end_date=${date_e}&filial_id=${this.state.filter_filial_id.value}&flow_category_id=${this.state.filter_category_id.value}&bank_account_id=${this.state.filter_bank_account_id.value}&${this.state.filter_type.value}`,
+        `/bills/?client_id=${client_id}&start_date=${date_s}&end_date=${date_e}&filial_id=${this.state.filter_filial_id.value}&flow_category_id=${this.state.filter_category_id.value}&bank_account_id=${this.state.filter_bank_account_id.value}&${this.state.filter_type.value}`,
       );
 
       this.setState({ bills: data.bills, previous_balance: data.previous_balance });
@@ -672,11 +702,12 @@ class Content extends Component {
   }
 
   componentDidMount() {
+    this.loadBills();
     this.loadFiliais();
     this.loadBankAcconts();
     this.loadBankAccontsIn();
     this.loadCategories();
-    this.loadBills();
+    this.loadClients();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -688,6 +719,7 @@ class Content extends Component {
           prevState.filter_filial_id !== this.state.filter_filial_id ||
           prevState.filter_category_id !== this.state.filter_category_id ||
           prevState.filter_bank_account_id !== this.state.filter_bank_account_id ||
+          prevState.filter_client_id !== this.state.filter_client_id ||
           prevState.filter_type !== this.state.filter_type
         ) {
           this.loadBills();
@@ -748,7 +780,7 @@ class Content extends Component {
       <Fragment>
         <div className="bill-filters">
           <Row>
-            <Col xs={12} sm={6} md={2}>
+            <Col xs={12} sm={6} md={3}>
               <Label for="filter_type" className="mt-10">
                 Tipo
               </Label>
@@ -763,7 +795,7 @@ class Content extends Component {
               />
             </Col>
 
-            <Col xs={12} sm={6} md={2}>
+            <Col xs={12} sm={6} md={3}>
               <Label for="filter_filial_id" className="mt-10">
                 Filial
               </Label>
@@ -778,7 +810,37 @@ class Content extends Component {
               />
             </Col>
 
-            <Col xs={12} sm={12} md={4}>
+            <Col xs={12} sm={6} md={3}>
+              <Label for="filter_category_id" className="mt-10">
+                Categorias
+              </Label>
+              <Select
+                id="filter_category_id"
+                name="filter_category_id"
+                defaultValue={this.state.filter_category_id}
+                value={this.state.filter_category_id}
+                options={[{ value: "", label: "Todas" }, ...this.state.flow_categories]}
+                styles={customStyles}
+                onChange={row => this.setState({ filter_category_id: row })}
+              />
+            </Col>
+            <Col xs={12} sm={6} md={3}>
+              <Label for="filter_bank_account_id" className="mt-10">
+                Contas & Carterias
+              </Label>
+              <Select
+                id="filter_bank_account_id"
+                name="filter_bank_account_id"
+                defaultValue={this.state.filter_bank_account_id}
+                value={this.state.filter_bank_account_id}
+                options={[{ value: "", label: "Todos" }, ...this.state.bank_accounts]}
+                styles={customStyles}
+                onChange={row => this.setState({ filter_bank_account_id: row })}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12} sm={12} md={6}>
               <Label className="mt-10">Período</Label>
               <Dropdown tag="div" className="" showTriangle>
                 <Dropdown.Toggle tag="button" className="btn btn-brand btn-block mb-5">
@@ -806,32 +868,18 @@ class Content extends Component {
               </Dropdown>
             </Col>
 
-            <Col xs={12} sm={6} md={2}>
-              <Label for="filter_category_id" className="mt-10">
-                Categorias
+            <Col xs={12} sm={6} md={6}>
+              <Label for="filter_client_id" className="mt-10">
+                Clientes
               </Label>
               <Select
-                id="filter_category_id"
-                name="filter_category_id"
-                defaultValue={this.state.filter_category_id}
-                value={this.state.filter_category_id}
-                options={[{ value: "", label: "Todas" }, ...this.state.flow_categories]}
+                id="filter_client_id"
+                name="filter_client_id"
+                defaultValue={this.state.filter_client_id}
+                value={this.state.filter_client_id}
+                options={[{ value: "", label: "Todos" }, ...this.state.clients]}
                 styles={customStyles}
-                onChange={row => this.setState({ filter_category_id: row })}
-              />
-            </Col>
-            <Col xs={12} sm={6} md={2}>
-              <Label for="filter_bank_account_id" className="mt-10">
-                Contas & Carterias
-              </Label>
-              <Select
-                id="filter_bank_account_id"
-                name="filter_bank_account_id"
-                defaultValue={this.state.filter_bank_account_id}
-                value={this.state.filter_bank_account_id}
-                options={[{ value: "", label: "Todos" }, ...this.state.bank_accounts]}
-                styles={customStyles}
-                onChange={row => this.setState({ filter_bank_account_id: row })}
+                onChange={row => this.setState({ filter_client_id: row })}
               />
             </Col>
           </Row>
@@ -893,6 +941,34 @@ class Content extends Component {
                   <UncontrolledPopover placement="right" target="popover_transf" trigger="hover">
                     <PopoverHeader>Transferência de recursos</PopoverHeader>
                     <PopoverBody>Clique para realizar uma transferência entre contas</PopoverBody>
+                  </UncontrolledPopover>
+
+                  <ExcelFile
+                    element={
+                      <button id="popover_download" type="button" className="ml-15 btn btn-custom-round btn-primary btn-down btn-lg btn-opt">
+                        <Icon name="download" />
+                      </button>
+                    }
+                    filename="contas-a-pagar-e-receber">
+                    <ExcelSheet data={this.state.bills} name="Contas a pagar e receber">
+                      <ExcelColumn label="ID" value="id" />
+                      <ExcelColumn label="Filial" value={col => col.filial?.name} />
+                      <ExcelColumn label="Data" value={col => format(parseISO(col.date), "dd'/'MM'/'yyyy")} />
+                      <ExcelColumn label="Tipo" value={col => (col.type === "out" ? "Contas à Pagar" : "Contas à receber")} />
+                      <ExcelColumn label="Situação" value={col => (col.state === "paid" ? "PAGO" : "À PAGAR")} />
+                      <ExcelColumn label="Valor da Movimentação" value={col => `R$ ${col.type === "out" ? col.value * -1 : col.value}`} />
+                      <ExcelColumn label="Descrição" value={col => col.description} />
+                      <ExcelColumn label="Categoria" value={col => col.flow_category?.name} />
+                      <ExcelColumn label="Grupo da Categoria" value={col => col.flow_category?.category} />
+                      <ExcelColumn label="Movimentação no Banco" value={col => col.bank_account?.name} />
+                      <ExcelColumn label="Nome Cliente" value={col => col.client?.name} />
+                      <ExcelColumn label="CPF Cliente" value={col => col.client?.cpf} />
+                      <ExcelColumn label="Observações" value="obs" />
+                    </ExcelSheet>
+                  </ExcelFile>
+                  <UncontrolledPopover placement="top" target="popover_download" trigger="hover">
+                    <PopoverHeader>Baixar EXCEL</PopoverHeader>
+                    <PopoverBody>Clique para fazer o download do arquivo excel</PopoverBody>
                   </UncontrolledPopover>
                 </div>
               </div>
@@ -994,10 +1070,22 @@ class Content extends Component {
                         <strong>{item?.flow_category?.name ?? "-"}</strong>
                       </CardSubtitle>
                       <CardSubtitle className="h4 text-muted mb-5">{item?.bank_account?.name}</CardSubtitle>
-                      {item.client_id ? (
+                      {item.client_id && !item.commission_id ? (
                         <>
                           <CardText className="mb-5">
                             <Link to={`/crm/clientes/show/${item.client_id}`} className="card-link">
+                              {item?.client?.name}
+                            </Link>
+                          </CardText>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+
+                      {item.client_id && item.commission_id ? (
+                        <>
+                          <CardText className="mb-5">
+                            <Link to={`/relatorios/gerenciais/comissoes?id=${item.id}`} className="card-link" target="_blank">
                               {item?.client?.name}
                             </Link>
                           </CardText>
